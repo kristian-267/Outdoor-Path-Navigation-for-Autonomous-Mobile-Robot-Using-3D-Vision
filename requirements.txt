@@ -1,0 +1,16 @@
+addict==2.4.0
+datasets==2.16.1
+matplotlib==3.8.2
+mmcv==2.1.0
+numpy==1.26.3
+open3d==0.18.0
+opencv_python==4.9.0.80
+pyrealsense2==2.54.2.5684
+regex==2023.12.25
+scipy==1.11.4
+SharedArray==3.2.3
+tensorboardX==2.6.2.2
+termcolor==2.4.0
+torch==2.1.2
+trimesh==4.0.8
+yapf==0.40.2
