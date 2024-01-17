@@ -1,11 +1,8 @@
 """
 Model Builder
-
-Author: Xiaoyang Wu (xiaoyang.wu.cs@gmail.com)
-Please cite our work if the code is helpful to you.
 """
 
-from src.util.registry import Registry
+from src.utils.registry import Registry
 
 MODELS = Registry('models')
 MODULES = Registry('modules')

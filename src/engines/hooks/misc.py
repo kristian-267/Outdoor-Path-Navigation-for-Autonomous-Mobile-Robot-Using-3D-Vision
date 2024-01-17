@@ -1,8 +1,5 @@
 """
 Misc Hook
-
-Author: Xiaoyang Wu (xiaoyang.wu.cs@gmail.com)
-Please cite our work if the code is helpful to you.
 """
 
 import sys
@@ -16,16 +13,21 @@ if sys.version_info >= (3, 10):
     from collections.abc import Sequence
 else:
     from collections import Sequence
-from pointcept.utils.timer import Timer
-from pointcept.utils.comm import is_main_process, synchronize
-from pointcept.utils.cache import shared_dict
-
-from pointcept.datasets import build_dataset
-from pointcept.datasets.utils import collate_fn
-from pointcept.engines.test import TEST
 
 from .default import HookBase
 from .builder import HOOKS
+
+import sys
+import pathlib
+sys.path.append(str(pathlib.Path(__file__).parent.parent.parent))
+
+from utils.timer import Timer
+from utils.comm import is_main_process, synchronize
+from utils.cache import shared_dict
+
+from dataset import build_dataset
+from dataset.utils import collate_fn
+from engines.test import TEST
 
 
 @HOOKS.register_module()

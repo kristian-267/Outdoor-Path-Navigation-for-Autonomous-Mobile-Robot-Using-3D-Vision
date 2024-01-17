@@ -1,6 +1,6 @@
 path_cfg = dict(
-    model_path = '/mnt/Documents/DTU/Thesis/thesis/model/model_state_dict_best.pth',
-    bag_path = '/mnt/Documents/DTU/Thesis/data/raw/20230315_151854.bag'
+    model_path = 'model/model_state_dict_best.pth', # Where the SPVCNN model stored
+    bag_path = 'data/bags/20230315_151854.bag' # Where the .bag file stored
 )
 model_cfg = dict(
     type="DefaultSegmentor",

@@ -11,9 +11,9 @@ import pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent.parent))
 
 from src.models import build_model
-from config.navigation import model_cfg, voxelize_cfg, path_cfg
-from src.data.data_prepare import normalize_color, center_shift, to_tensor
-from src.util.voxelize import Voxelize
+from configs.navigation.navigation import model_cfg, voxelize_cfg, path_cfg
+from src.dataset.data_prepare import normalize_color, center_shift, to_tensor
+from src.utils.voxelize import Voxelize
 
 
 def data_load(data_path):

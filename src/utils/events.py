@@ -2,9 +2,6 @@
 Events Utils
 
 Modified from Detectron2
-
-Author: Xiaoyang Wu (xiaoyang.wu.cs@gmail.com)
-Please cite our work if the code is helpful to you.
 """
 
 

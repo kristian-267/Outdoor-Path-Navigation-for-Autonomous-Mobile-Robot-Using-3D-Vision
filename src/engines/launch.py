@@ -2,9 +2,6 @@
 Launcher
 
 modified from detectron2(https://github.com/facebookresearch/detectron2)
-
-Author: Xiaoyang Wu (xiaoyang.wu.cs@gmail.com)
-Please cite our work if the code is helpful to you.
 """
 
 import os
@@ -14,7 +11,11 @@ import torch
 import torch.distributed as dist
 import torch.multiprocessing as mp
 
-from pointcept.utils import comm
+import sys
+import pathlib
+sys.path.append(str(pathlib.Path(__file__).parent.parent))
+
+from utils import comm
 
 __all__ = ["DEFAULT_TIMEOUT", "launch"]
 

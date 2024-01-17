@@ -1,5 +1,5 @@
 """
-SPVCNN (with both batchnorm and dropout)
+SPVCNN (with batchnorm but without dropout)
 """
 
 import torch
@@ -113,7 +113,7 @@ def voxel_to_point(x, z, nearest=False):
     return new_tensor
 
 
-class BasicConvolutionBlock(nn.Module):
+class BasicConvolutionBlock_BN(nn.Module):
 
     def __init__(self, inc, outc, ks=3, stride=1, dilation=1):
         super().__init__()
@@ -132,7 +132,7 @@ class BasicConvolutionBlock(nn.Module):
         return out
 
 
-class BasicDeconvolutionBlock(nn.Module):
+class BasicDeconvolutionBlock_BN(nn.Module):
 
     def __init__(self, inc, outc, ks=3, stride=1):
         super().__init__()
@@ -150,7 +150,7 @@ class BasicDeconvolutionBlock(nn.Module):
         return self.net(x)
 
 
-class ResidualBlock(nn.Module):
+class ResidualBlock_BN(nn.Module):
 
     def __init__(self, inc, outc, ks=3, stride=1, dilation=1):
         super().__init__()
@@ -184,7 +184,7 @@ class ResidualBlock(nn.Module):
 
 
 @MODELS.register_module()
-class SPVCNN(nn.Module):
+class SPVCNN_BN(nn.Module):
     def __init__(self,
                  in_channels,
                  out_channels,
@@ -212,65 +212,65 @@ class SPVCNN(nn.Module):
             spnn.ReLU(True))
 
         self.stage1 = nn.Sequential(
-            *[BasicConvolutionBlock(base_channels, base_channels, ks=2, stride=2, dilation=1),
-              ResidualBlock(base_channels, channels[0], ks=3, stride=1, dilation=1)] +
-             [ResidualBlock(channels[0], channels[0], ks=3, stride=1, dilation=1)
+            *[BasicConvolutionBlock_BN(base_channels, base_channels, ks=2, stride=2, dilation=1),
+              ResidualBlock_BN(base_channels, channels[0], ks=3, stride=1, dilation=1)] +
+             [ResidualBlock_BN(channels[0], channels[0], ks=3, stride=1, dilation=1)
               for _ in range(layers[0] - 1)]
         )
 
         self.stage2 = nn.Sequential(
-            *[BasicConvolutionBlock(channels[0], channels[0], ks=2, stride=2, dilation=1),
-              ResidualBlock(channels[0], channels[1], ks=3, stride=1, dilation=1)] +
-             [ResidualBlock(channels[1], channels[1], ks=3, stride=1, dilation=1)
+            *[BasicConvolutionBlock_BN(channels[0], channels[0], ks=2, stride=2, dilation=1),
+              ResidualBlock_BN(channels[0], channels[1], ks=3, stride=1, dilation=1)] +
+             [ResidualBlock_BN(channels[1], channels[1], ks=3, stride=1, dilation=1)
               for _ in range(layers[1] - 1)]
         )
 
         self.stage3 = nn.Sequential(
-            *[BasicConvolutionBlock(channels[1], channels[1], ks=2, stride=2, dilation=1),
-              ResidualBlock(channels[1], channels[2], ks=3, stride=1, dilation=1)] +
-             [ResidualBlock(channels[2], channels[2], ks=3, stride=1, dilation=1)
+            *[BasicConvolutionBlock_BN(channels[1], channels[1], ks=2, stride=2, dilation=1),
+              ResidualBlock_BN(channels[1], channels[2], ks=3, stride=1, dilation=1)] +
+             [ResidualBlock_BN(channels[2], channels[2], ks=3, stride=1, dilation=1)
               for _ in range(layers[2] - 1)]
         )
 
         self.stage4 = nn.Sequential(
-            *[BasicConvolutionBlock(channels[2], channels[2], ks=2, stride=2, dilation=1),
-              ResidualBlock(channels[2], channels[3], ks=3, stride=1, dilation=1)] +
-             [ResidualBlock(channels[3], channels[3], ks=3, stride=1, dilation=1)
+            *[BasicConvolutionBlock_BN(channels[2], channels[2], ks=2, stride=2, dilation=1),
+              ResidualBlock_BN(channels[2], channels[3], ks=3, stride=1, dilation=1)] +
+             [ResidualBlock_BN(channels[3], channels[3], ks=3, stride=1, dilation=1)
               for _ in range(layers[3] - 1)]
         )
 
         self.up1 = nn.ModuleList([
-            BasicDeconvolutionBlock(channels[3], channels[4], ks=2, stride=2),
+            BasicDeconvolutionBlock_BN(channels[3], channels[4], ks=2, stride=2),
             nn.Sequential(
-                *[ResidualBlock(channels[4] + channels[2], channels[4], ks=3, stride=1, dilation=1)] +
-                 [ResidualBlock(channels[4], channels[4], ks=3, stride=1, dilation=1)
+                *[ResidualBlock_BN(channels[4] + channels[2], channels[4], ks=3, stride=1, dilation=1)] +
+                 [ResidualBlock_BN(channels[4], channels[4], ks=3, stride=1, dilation=1)
                   for _ in range(layers[4] - 1)]
             )
         ])
 
         self.up2 = nn.ModuleList([
-            BasicDeconvolutionBlock(channels[4], channels[5], ks=2, stride=2),
+            BasicDeconvolutionBlock_BN(channels[4], channels[5], ks=2, stride=2),
             nn.Sequential(
-                *[ResidualBlock(channels[5] + channels[1], channels[5], ks=3, stride=1, dilation=1)] +
-                 [ResidualBlock(channels[5], channels[5], ks=3, stride=1, dilation=1)
+                *[ResidualBlock_BN(channels[5] + channels[1], channels[5], ks=3, stride=1, dilation=1)] +
+                 [ResidualBlock_BN(channels[5], channels[5], ks=3, stride=1, dilation=1)
                   for _ in range(layers[5] - 1)]
             )
         ])
 
         self.up3 = nn.ModuleList([
-            BasicDeconvolutionBlock(channels[5], channels[6], ks=2, stride=2),
+            BasicDeconvolutionBlock_BN(channels[5], channels[6], ks=2, stride=2),
             nn.Sequential(
-                *[ResidualBlock(channels[6] + channels[0], channels[6], ks=3, stride=1, dilation=1)] +
-                 [ResidualBlock(channels[6], channels[6], ks=3, stride=1, dilation=1)
+                *[ResidualBlock_BN(channels[6] + channels[0], channels[6], ks=3, stride=1, dilation=1)] +
+                 [ResidualBlock_BN(channels[6], channels[6], ks=3, stride=1, dilation=1)
                   for _ in range(layers[6] - 1)]
             )
         ])
 
         self.up4 = nn.ModuleList([
-            BasicDeconvolutionBlock(channels[6], channels[7], ks=2, stride=2),
+            BasicDeconvolutionBlock_BN(channels[6], channels[7], ks=2, stride=2),
             nn.Sequential(
-                *[ResidualBlock(channels[7] + base_channels, channels[7], ks=3, stride=1, dilation=1)] +
-                [ResidualBlock(channels[7], channels[7], ks=3, stride=1, dilation=1)
+                *[ResidualBlock_BN(channels[7] + base_channels, channels[7], ks=3, stride=1, dilation=1)] +
+                [ResidualBlock_BN(channels[7], channels[7], ks=3, stride=1, dilation=1)
                  for _ in range(layers[7] - 1)]
             )
         ])
@@ -327,7 +327,6 @@ class SPVCNN(nn.Module):
         z1.F = z1.F + self.point_transforms[0](z0.F)
 
         y1 = point_to_voxel(x4, z1)
-        y1.F = self.dropout(y1.F)
         y1 = self.up1[0](y1)
         y1 = torchsparse.cat([y1, x3])
         y1 = self.up1[1](y1)
@@ -339,7 +338,6 @@ class SPVCNN(nn.Module):
         z2.F = z2.F + self.point_transforms[1](z1.F)
 
         y3 = point_to_voxel(y2, z2)
-        y3.F = self.dropout(y3.F)
         y3 = self.up3[0](y3)
         y3 = torchsparse.cat([y3, x1])
         y3 = self.up3[1](y3)

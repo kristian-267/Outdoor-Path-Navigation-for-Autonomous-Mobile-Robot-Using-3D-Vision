@@ -1,5 +1,5 @@
 """
-SPVCNN (with both batchnorm and dropout)
+SPVCNN (with dropout but without batchnorm)
 """
 
 import torch
@@ -113,7 +113,7 @@ def voxel_to_point(x, z, nearest=False):
     return new_tensor
 
 
-class BasicConvolutionBlock(nn.Module):
+class BasicConvolutionBlock_DP(nn.Module):
 
     def __init__(self, inc, outc, ks=3, stride=1, dilation=1):
         super().__init__()
@@ -123,7 +123,6 @@ class BasicConvolutionBlock(nn.Module):
                         kernel_size=ks,
                         dilation=dilation,
                         stride=stride),
-            spnn.BatchNorm(outc),
             spnn.ReLU(True),
         )
 
@@ -132,7 +131,7 @@ class BasicConvolutionBlock(nn.Module):
         return out
 
 
-class BasicDeconvolutionBlock(nn.Module):
+class BasicDeconvolutionBlock_DP(nn.Module):
 
     def __init__(self, inc, outc, ks=3, stride=1):
         super().__init__()
@@ -142,7 +141,6 @@ class BasicDeconvolutionBlock(nn.Module):
                         kernel_size=ks,
                         stride=stride,
                         transposed=True),
-            spnn.BatchNorm(outc),
             spnn.ReLU(True),
         )
 
@@ -150,7 +148,7 @@ class BasicDeconvolutionBlock(nn.Module):
         return self.net(x)
 
 
-class ResidualBlock(nn.Module):
+class ResidualBlock_DP(nn.Module):
 
     def __init__(self, inc, outc, ks=3, stride=1, dilation=1):
         super().__init__()
@@ -160,11 +158,9 @@ class ResidualBlock(nn.Module):
                         kernel_size=ks,
                         dilation=dilation,
                         stride=stride),
-            spnn.BatchNorm(outc),
             spnn.ReLU(True),
             spnn.Conv3d(outc, outc, kernel_size=ks, dilation=dilation,
                         stride=1),
-            spnn.BatchNorm(outc),
         )
 
         if inc == outc and stride == 1:
@@ -173,7 +169,6 @@ class ResidualBlock(nn.Module):
             self.downsample = nn.Sequential(
                 spnn.Conv3d(inc, outc, kernel_size=1, dilation=1,
                             stride=stride),
-                spnn.BatchNorm(outc),
             )
 
         self.relu = spnn.ReLU(True)
@@ -184,7 +179,7 @@ class ResidualBlock(nn.Module):
 
 
 @MODELS.register_module()
-class SPVCNN(nn.Module):
+class SPVCNN_DP(nn.Module):
     def __init__(self,
                  in_channels,
                  out_channels,
@@ -205,72 +200,70 @@ class SPVCNN(nn.Module):
 
         self.stem = nn.Sequential(
             spnn.Conv3d(in_channels, base_channels, kernel_size=3, stride=1),
-            spnn.BatchNorm(base_channels),
             spnn.ReLU(True),
             spnn.Conv3d(base_channels, base_channels, kernel_size=3, stride=1),
-            spnn.BatchNorm(base_channels),
             spnn.ReLU(True))
 
         self.stage1 = nn.Sequential(
-            *[BasicConvolutionBlock(base_channels, base_channels, ks=2, stride=2, dilation=1),
-              ResidualBlock(base_channels, channels[0], ks=3, stride=1, dilation=1)] +
-             [ResidualBlock(channels[0], channels[0], ks=3, stride=1, dilation=1)
+            *[BasicConvolutionBlock_DP(base_channels, base_channels, ks=2, stride=2, dilation=1),
+              ResidualBlock_DP(base_channels, channels[0], ks=3, stride=1, dilation=1)] +
+             [ResidualBlock_DP(channels[0], channels[0], ks=3, stride=1, dilation=1)
               for _ in range(layers[0] - 1)]
         )
 
         self.stage2 = nn.Sequential(
-            *[BasicConvolutionBlock(channels[0], channels[0], ks=2, stride=2, dilation=1),
-              ResidualBlock(channels[0], channels[1], ks=3, stride=1, dilation=1)] +
-             [ResidualBlock(channels[1], channels[1], ks=3, stride=1, dilation=1)
+            *[BasicConvolutionBlock_DP(channels[0], channels[0], ks=2, stride=2, dilation=1),
+              ResidualBlock_DP(channels[0], channels[1], ks=3, stride=1, dilation=1)] +
+             [ResidualBlock_DP(channels[1], channels[1], ks=3, stride=1, dilation=1)
               for _ in range(layers[1] - 1)]
         )
 
         self.stage3 = nn.Sequential(
-            *[BasicConvolutionBlock(channels[1], channels[1], ks=2, stride=2, dilation=1),
-              ResidualBlock(channels[1], channels[2], ks=3, stride=1, dilation=1)] +
-             [ResidualBlock(channels[2], channels[2], ks=3, stride=1, dilation=1)
+            *[BasicConvolutionBlock_DP(channels[1], channels[1], ks=2, stride=2, dilation=1),
+              ResidualBlock_DP(channels[1], channels[2], ks=3, stride=1, dilation=1)] +
+             [ResidualBlock_DP(channels[2], channels[2], ks=3, stride=1, dilation=1)
               for _ in range(layers[2] - 1)]
         )
 
         self.stage4 = nn.Sequential(
-            *[BasicConvolutionBlock(channels[2], channels[2], ks=2, stride=2, dilation=1),
-              ResidualBlock(channels[2], channels[3], ks=3, stride=1, dilation=1)] +
-             [ResidualBlock(channels[3], channels[3], ks=3, stride=1, dilation=1)
+            *[BasicConvolutionBlock_DP(channels[2], channels[2], ks=2, stride=2, dilation=1),
+              ResidualBlock_DP(channels[2], channels[3], ks=3, stride=1, dilation=1)] +
+             [ResidualBlock_DP(channels[3], channels[3], ks=3, stride=1, dilation=1)
               for _ in range(layers[3] - 1)]
         )
 
         self.up1 = nn.ModuleList([
-            BasicDeconvolutionBlock(channels[3], channels[4], ks=2, stride=2),
+            BasicDeconvolutionBlock_DP(channels[3], channels[4], ks=2, stride=2),
             nn.Sequential(
-                *[ResidualBlock(channels[4] + channels[2], channels[4], ks=3, stride=1, dilation=1)] +
-                 [ResidualBlock(channels[4], channels[4], ks=3, stride=1, dilation=1)
+                *[ResidualBlock_DP(channels[4] + channels[2], channels[4], ks=3, stride=1, dilation=1)] +
+                 [ResidualBlock_DP(channels[4], channels[4], ks=3, stride=1, dilation=1)
                   for _ in range(layers[4] - 1)]
             )
         ])
 
         self.up2 = nn.ModuleList([
-            BasicDeconvolutionBlock(channels[4], channels[5], ks=2, stride=2),
+            BasicDeconvolutionBlock_DP(channels[4], channels[5], ks=2, stride=2),
             nn.Sequential(
-                *[ResidualBlock(channels[5] + channels[1], channels[5], ks=3, stride=1, dilation=1)] +
-                 [ResidualBlock(channels[5], channels[5], ks=3, stride=1, dilation=1)
+                *[ResidualBlock_DP(channels[5] + channels[1], channels[5], ks=3, stride=1, dilation=1)] +
+                 [ResidualBlock_DP(channels[5], channels[5], ks=3, stride=1, dilation=1)
                   for _ in range(layers[5] - 1)]
             )
         ])
 
         self.up3 = nn.ModuleList([
-            BasicDeconvolutionBlock(channels[5], channels[6], ks=2, stride=2),
+            BasicDeconvolutionBlock_DP(channels[5], channels[6], ks=2, stride=2),
             nn.Sequential(
-                *[ResidualBlock(channels[6] + channels[0], channels[6], ks=3, stride=1, dilation=1)] +
-                 [ResidualBlock(channels[6], channels[6], ks=3, stride=1, dilation=1)
+                *[ResidualBlock_DP(channels[6] + channels[0], channels[6], ks=3, stride=1, dilation=1)] +
+                 [ResidualBlock_DP(channels[6], channels[6], ks=3, stride=1, dilation=1)
                   for _ in range(layers[6] - 1)]
             )
         ])
 
         self.up4 = nn.ModuleList([
-            BasicDeconvolutionBlock(channels[6], channels[7], ks=2, stride=2),
+            BasicDeconvolutionBlock_DP(channels[6], channels[7], ks=2, stride=2),
             nn.Sequential(
-                *[ResidualBlock(channels[7] + base_channels, channels[7], ks=3, stride=1, dilation=1)] +
-                [ResidualBlock(channels[7], channels[7], ks=3, stride=1, dilation=1)
+                *[ResidualBlock_DP(channels[7] + base_channels, channels[7], ks=3, stride=1, dilation=1)] +
+                [ResidualBlock_DP(channels[7], channels[7], ks=3, stride=1, dilation=1)
                  for _ in range(layers[7] - 1)]
             )
         ])
@@ -280,17 +273,14 @@ class SPVCNN(nn.Module):
         self.point_transforms = nn.ModuleList([
             nn.Sequential(
                 nn.Linear(base_channels, channels[3]),
-                nn.BatchNorm1d(channels[3]),
                 nn.ReLU(True),
             ),
             nn.Sequential(
                 nn.Linear(channels[3], channels[5]),
-                nn.BatchNorm1d(channels[5]),
                 nn.ReLU(True),
             ),
             nn.Sequential(
                 nn.Linear(channels[5], channels[7]),
-                nn.BatchNorm1d(channels[7]),
                 nn.ReLU(True),
             )
         ])

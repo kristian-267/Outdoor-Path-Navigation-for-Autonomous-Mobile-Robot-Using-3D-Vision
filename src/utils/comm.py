@@ -3,9 +3,6 @@
 This file contains primitives for multi-gpu communication.
 This is useful when doing distributed training.
 Modified from detectron2(https://github.com/facebookresearch/detectron2)
-
-Copyright (c) Xiaoyang Wu (xiaoyang.wu@connect.hku.hk). All Rights Reserved.
-Please cite our work if you use any part of the code.
 """
 
 import functools

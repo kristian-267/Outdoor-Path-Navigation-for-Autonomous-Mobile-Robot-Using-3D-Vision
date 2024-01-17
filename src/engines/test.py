@@ -1,8 +1,5 @@
 """
 Tester
-
-Author: Xiaoyang Wu (xiaoyang.wu.cs@gmail.com)
-Please cite our work if the code is helpful to you.
 """
 
 
@@ -12,10 +9,15 @@ import numpy as np
 import pickle
 import torch
 import torch.nn.functional as F
-from ..utils.registry import Registry
-from ..utils.logger import get_root_logger
-from ..utils.misc import AverageMeter, intersection_and_union, intersection_and_union_gpu, make_dirs
-from ..datasets.utils import collate_fn
+
+import sys
+import pathlib
+sys.path.append(str(pathlib.Path(__file__).parent.parent))
+
+from utils.registry import Registry
+from utils.logger import get_root_logger
+from utils.misc import AverageMeter, intersection_and_union, intersection_and_union_gpu, make_dirs
+from dataset.utils import collate_fn
 
 TEST = Registry("test")
 

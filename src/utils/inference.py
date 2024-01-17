@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 
-from src.data.data_prepare import normalize_color, center_shift, to_tensor
+from src.dataset.data_prepare import normalize_color, center_shift, to_tensor
 
 def inference(data, model):
     model.eval()

@@ -1,8 +1,5 @@
 """
 Main Testing Script
-
-Author: Xiaoyang Wu (xiaoyang.wu.cs@gmail.com)
-Please cite our work if the code is helpful to you.
 """
 
 import os
@@ -16,13 +13,13 @@ import torch.nn.parallel
 import torch.optim
 import torch.utils.data
 
-from pointcept.models import build_model
-from pointcept.datasets import build_dataset
-from pointcept.datasets.utils import collate_fn
-from pointcept.utils.config import Config, DictAction
-from pointcept.utils.logger import get_root_logger
-from pointcept.utils.env import get_random_seed, set_seed
-from pointcept.engines.test import TEST
+from src.models import build_model
+from src.dataset import build_dataset
+from src.dataset.utils import collate_fn
+from src.utils.config import Config, DictAction
+from src.utils.logger import get_root_logger
+from src.utils.env import get_random_seed, set_seed
+from src.engines.test import TEST
 
 
 def get_parser():

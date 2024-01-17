@@ -1,14 +1,11 @@
 """
 Losses
-
-Author: Xiaoyang Wu (xiaoyang.wu.cs@gmail.com)
-Please cite our work if the code is helpful to you.
 """
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from pointcept.utils.registry import Registry
+from src.utils.registry import Registry
 
 LOSSES = Registry("losses")
 

@@ -1,8 +1,5 @@
 """
 Scheduler
-
-Author: Xiaoyang Wu (xiaoyang.wu.cs@gmail.com)
-Please cite our work if the code is helpful to you.
 """
 
 import torch.optim.lr_scheduler as lr_scheduler

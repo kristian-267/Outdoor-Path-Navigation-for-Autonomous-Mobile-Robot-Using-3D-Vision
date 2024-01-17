@@ -2,9 +2,6 @@
 3D Point Cloud Augmentation
 
 Inspirited by chrischoy/SpatioTemporalSegmentation
-
-Author: Xiaoyang Wu (xiaoyang.wu.cs@gmail.com)
-Please cite our work if the code is helpful to you.
 """
 
 import random

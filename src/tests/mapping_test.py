@@ -6,7 +6,7 @@ import sys
 import pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent.parent))
 
-from src.util.grid import pcd2grid
+from src.utils.grid import pcd2grid
 from src.libs.HybridAStar.hybrid_a_star import hybrid_a_star_planning
 from src.libs.HybridAStar.car import rectangle_check, plot_car
 

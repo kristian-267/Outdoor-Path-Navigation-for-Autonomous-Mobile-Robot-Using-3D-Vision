@@ -8,7 +8,7 @@ author: Zheng Zh (@Zhengzh)
 
 import sys
 import pathlib
-root_dir = pathlib.Path(__file__).parent.parent
+root_dir = pathlib.Path(__file__).parent.parent.parent
 sys.path.append(str(root_dir))
 
 from math import cos, sin, tan, pi
@@ -16,7 +16,7 @@ from math import cos, sin, tan, pi
 import matplotlib.pyplot as plt
 import numpy as np
 
-from src.util.angle import rot_mat_2d
+from src.utils.angle import rot_mat_2d
 
 WB = 1.0  # rear to front wheel
 W = 0.8  # width of car

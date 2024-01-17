@@ -2,9 +2,6 @@
 Default training/testing logic
 
 modified from detectron2(https://github.com/facebookresearch/detectron2)
-
-Author: Xiaoyang Wu (xiaoyang.wu.cs@gmail.com)
-Please cite our work if the code is helpful to you.
 """
 
 import os
@@ -13,10 +10,13 @@ import argparse
 import multiprocessing as mp
 from torch.nn.parallel import DistributedDataParallel
 
+import sys
+import pathlib
+sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
-import pointcept.utils.comm as comm
-from pointcept.utils.env import get_random_seed, set_seed
-from pointcept.utils.config import Config, DictAction
+import utils.comm as comm
+from utils.env import get_random_seed, set_seed
+from utils.config import Config, DictAction
 
 
 def create_ddp_model(model, *, fp16_compression=False, **kwargs):

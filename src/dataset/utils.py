@@ -1,8 +1,5 @@
 """
-Utils for Datasets
-
-Author: Xiaoyang Wu (xiaoyang.wu.cs@gmail.com)
-Please cite our work if the code is helpful to you.
+Utils for Dataset
 """
 
 import random

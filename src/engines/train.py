@@ -1,8 +1,5 @@
 """
 Trainer
-
-Author: Xiaoyang Wu (xiaoyang.wu.cs@gmail.com)
-Please cite our work if the code is helpful to you.
 """
 
 import os
@@ -21,14 +18,19 @@ from tensorboardX import SummaryWriter
 
 from .defaults import create_ddp_model, worker_init_fn
 from .hooks import HookBase, build_hooks
-import pointcept.utils.comm as comm
-from pointcept.datasets import build_dataset, point_collate_fn, collate_fn
-from pointcept.models import build_model
-from pointcept.utils.logger import get_root_logger
-from pointcept.utils.optimizer import build_optimizer
-from pointcept.utils.scheduler import build_scheduler
-from pointcept.utils.losses import build_criteria
-from pointcept.utils.events import EventStorage
+
+import sys
+import pathlib
+sys.path.append(str(pathlib.Path(__file__).parent.parent))
+
+import utils.comm as comm
+from dataset import build_dataset, point_collate_fn, collate_fn
+from models import build_model
+from utils.logger import get_root_logger
+from utils.optimizer import build_optimizer
+from utils.scheduler import build_scheduler
+from utils.losses import build_criteria
+from utils.events import EventStorage
 
 
 class TrainerBase:

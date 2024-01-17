@@ -6,13 +6,12 @@ PYTHON=python
 
 TRAIN_CODE=train.py
 
-DATASET=scannet
-CONFIG=point_transformer_v2
+DATASET=dtu_trail
+CONFIG=semseg-spvcnn-all
 EXP_NAME=debug
 WEIGHT="None"
 RESUME=false
 GPU=None
-
 
 while getopts "p:d:c:n:w:g:r:" opt; do
   case $opt in

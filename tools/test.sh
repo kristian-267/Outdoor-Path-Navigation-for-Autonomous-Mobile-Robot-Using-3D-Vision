@@ -6,7 +6,7 @@ PYTHON=python
 
 TEST_CODE=test.py
 
-DATASET=s3dis
+DATASET=dtu_trail
 CONFIG="None"
 EXP_NAME=debug
 WEIGHT=model_best

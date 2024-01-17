@@ -13,12 +13,12 @@ import numpy as np
 from scipy.spatial import cKDTree
 import sys
 import pathlib
-sys.path.append(str(pathlib.Path(__file__).parent.parent))
+sys.path.append(str(pathlib.Path(__file__).parent.parent.parent))
 
 from dynamic_programming_heuristic import calc_distance_heuristic
 from src.libs.ReedsSheppPath import reeds_shepp_path_planning as rs
 from car import move, check_car_collision, MAX_STEER, WB, plot_car, BUBBLE_R
-from config.navigation import grid_cfg
+from configs.navigation.navigation import grid_cfg
 
 XY_GRID_RESOLUTION = grid_cfg['grid_size']  # [m]
 YAW_GRID_RESOLUTION = np.deg2rad(5.0)  # [rad]

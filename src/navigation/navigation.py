@@ -6,19 +6,20 @@ import sys
 import pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent.parent))
 
-from config.navigation import model_cfg, voxelize_cfg, path_cfg, camera_cfg, grid_cfg
-from src.util.voxelize import Voxelize
-from src.util.ransac import find_ground
-from src.util.filters import set_filters, filter_depth
-from src.util.pointclouds import generate_pcd, convert2pcd, prediction2pcd
-from src.util.inference import inference
-from src.util.model import load_model
-from src.util.grid import pcd2grid
-from src.util.image import cat_color_depth
-from src.util.visualization import visualize
+from configs.navigation.navigation import model_cfg, voxelize_cfg, path_cfg, camera_cfg, grid_cfg
+from src.utils.voxelize import Voxelize
+from src.utils.ransac import find_ground
+from src.utils.filters import set_filters, filter_depth
+from src.utils.pointclouds import generate_pcd, convert2pcd, prediction2pcd
+from src.utils.inference import inference
+from src.utils.model import load_model
+from src.utils.grid import pcd2grid
+from src.utils.image import cat_color_depth
+from src.utils.visualization import visualize
 from src.libs.HybridAStar.hybrid_a_star import hybrid_a_star_planning
 from src.libs.HybridAStar.car import rectangle_check
-from src.data.data_prepare import center_shift
+from src.dataset.data_prepare import center_shift
+from src.libs.DynamicWindowApproach.dynamic_window_approach import RobotType, Config, dwa_control, motion, plot_robot, plot_arrow
 
 
 def plan_path(nodes, ranges, grid_size):

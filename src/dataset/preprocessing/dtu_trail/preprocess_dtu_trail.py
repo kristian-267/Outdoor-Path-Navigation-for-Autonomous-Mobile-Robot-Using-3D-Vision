@@ -1,9 +1,6 @@
 """
-Preprocessing Script for S3DIS
+Preprocessing Script for DTU Trail dataset
 Parsing normal vectors has a large consumption of memory. Please reduce max_workers if memory is limited.
-
-Author: Xiaoyang Wu (xiaoyang.wu.cs@gmail.com)
-Please cite our work if the code is helpful to you.
 """
 
 import os
@@ -29,6 +26,10 @@ except ImportError:
 
 from concurrent.futures import ProcessPoolExecutor
 from itertools import repeat
+
+import sys
+import pathlib
+sys.path.append(str(pathlib.Path(__file__).parent.parent.parent.parent))
 
 area_mesh_dict = {}
 
@@ -68,12 +69,12 @@ def parse_scean(scean, dataset_root, output_root):
 
 def main_process():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset_root', default='', required=False, help='Path to Stanford3dDataset_v1.2 dataset')
+    parser.add_argument('--dataset_root', default='', required=False, help='Path to DTU Trail dataset')
     parser.add_argument('--output_root', default='', required=False, help='Output path where area folders will be located')
     args = parser.parse_args()
     
-    args.dataset_root = '/mnt/Documents/DTU/Thesis/data/processed/dtu_trail_raw/test/data'
-    args.output_root = '/mnt/Documents/DTU/Thesis/data/processed/dtu_trail/test'
+    args.dataset_root = '/data/dtu_trail/raw'
+    args.output_root = '/data/dtu_trail/processed'
 
     scean_list = []
 
