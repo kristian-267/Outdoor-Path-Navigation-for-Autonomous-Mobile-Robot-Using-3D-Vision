@@ -11,5 +11,5 @@ log
 outputs/
 .vscode
 .idea
-*/.DS_Store
 **/*.out
+.DS_Store
