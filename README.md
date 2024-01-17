@@ -7,7 +7,7 @@ This repository is dedicated to develop a sophisticated system designed for enab
 - **Real-time Sensor Data Handling**: Incorporates scripts for handling real-time data from sensors like Intel RealSense cameras.
 - **3D Vision and Point Cloud Processing**: Utilizes 3D vision for navigation, incorporating scripts for point cloud generation and processing.
 - **Deep Learning Model Integration**: Includes functionality for building and running [SPVCNN](https://arxiv.org/abs/2007.16100) model, with focus on semantic segmentation to detect paths and obstacles.
-- **Mapping and Path Planning Algorithms**: Creats grid maps and implements algorithms like Hybrid A* and Reeds-Shepp for efficient pathfinding in complex outdoor environments.
+- **Mapping and Path Planning Algorithms**: Creates grid maps and implements algorithms like Hybrid A* and Reeds-Shepp for efficient pathfinding in complex outdoor environments.
 - **Autonomous Navigation**: Combines sensor data processing, deep learning inference, mapping, and path planning for autonomous navigation.
 
 ## Contents
