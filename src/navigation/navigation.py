@@ -19,7 +19,6 @@ from src.utils.visualization import visualize
 from src.libs.HybridAStar.hybrid_a_star import hybrid_a_star_planning
 from src.libs.HybridAStar.car import rectangle_check
 from src.dataset.data_prepare import center_shift
-from src.libs.DynamicWindowApproach.dynamic_window_approach import RobotType, Config, dwa_control, motion, plot_robot, plot_arrow
 
 
 def plan_path(nodes, ranges, grid_size):
