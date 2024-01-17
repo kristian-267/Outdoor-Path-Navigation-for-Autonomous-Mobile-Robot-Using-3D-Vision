@@ -49,6 +49,7 @@ sh tools/train.sh -g ${NUM_GPU} -d dtu_trail -c semseg-spvcnn-all -n ${EXP_NAME}
 sh scripts/test.sh -g ${NUM_GPU} -d dtu_trail -n ${EXP_NAME} -w ${CHECKPOINT_NAME}
 ```
 - **Navigation**:
+
 Connect Intel RealSense camera mounted on the robot, run:
 ```bash
 export PYTHONPATH=./
